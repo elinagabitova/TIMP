@@ -1,0 +1,173 @@
+#include <iostream>
+
+using namespace std;
+
+template <typename T> class queue
+{
+private:
+	T* qptr;
+	int size;
+	T top;
+public:
+	queue();
+	queue(const T& size);
+	~queue();
+
+	void print()const;
+	T operator[] (const T& num)const;
+	void add(const T& value);
+	bool isFull()const;
+	void p_back();
+	T get()const;
+
+};
+
+template <typename T> queue<T>::queue()
+{
+	qptr = new T[5]();
+	top = 0;
+	size = 5;
+}
+
+template<typename T> queue<T>::queue(const T& _size)
+{
+	qptr = new T[_size]();
+	top = 0;
+	size = _size;
+}
+
+template <typename T> queue<T>::~queue()
+{
+	delete[] qptr;
+}
+
+template<typename T> T queue<T>::operator[](const T& num)const
+{
+	return qptr[num];
+}
+
+template<typename T> bool queue<T>::isFull()const
+{
+	return (top >= size);
+}
+
+template<typename T> void queue<T>::add(const T& value)
+{
+	if (size == 0)
+	{
+		delete[] qptr;
+		qptr = new T[1]();
+		qptr[0] = value;
+		++size;
+		return;
+	}
+
+
+	if (!top && !qptr[0])
+	{
+		qptr[0] = value;
+		return;
+	}
+	++top;
+	if (isFull())
+	{
+		T* ptr = new T[size + 1]();
+		for (int i = 0; i < size; i++)
+			ptr[i] = qptr[i];
+		delete[] qptr;
+		qptr = ptr;
+		++size;
+		qptr[top] = value;
+	}
+	else
+	{
+		qptr[top] = value;
+	}
+}
+
+template<typename T> void queue<T>::print()const
+{
+	if (size)
+	{
+		for (int i = 0; i < size; i++)
+			cout << qptr[i] << "\t";
+		cout << "\n";
+	}
+	else cout << "queue is empty!";
+}
+
+template<typename T> void queue<T>::p_back()
+{
+	if (top)
+	{
+		T* ptr = new T[size - 1];
+		for (int i = 0; i < size - 1; i++)
+			ptr[i] = qptr[i + 1];
+		delete[] qptr;
+		qptr = ptr;
+		--size;
+		--top;
+	}
+	else
+	{
+		cout << "Now queue is empty!\n";
+		if (top == 0)
+		{
+			delete[] qptr;
+			qptr = nullptr;
+			size = 0;
+		}
+	}
+}
+
+template<typename T> T queue<T>::get()const
+{
+	return qptr[top];
+}
+
+int main()
+{
+	int _size, value;
+	char ch = '9';
+	cout << "Enter the size: ";
+	cin >> _size;
+	queue<int> test(_size);
+	while (ch != '0')
+	{
+		cout << "\n\n--------------------------------------------------------------\n" <<
+			"What do you want to do?\nPress:\n\"1\" to add data\n\"2\" to delete data\n\"3\" to show last element\n\"4\" to show the stack\n\"0\" to exit\n"
+			<< "--------------------------------------------------------------" << "\n\n";
+
+		cin >> ch;
+		cout << "\n";
+
+		switch (ch)
+		{
+			case '1':
+			{
+				cout << "Enter the value: ";
+				cin >> value;
+				test.add(value);
+				break;
+			}
+			case '2':
+			{
+				test.p_back();
+				break;
+			}
+			case '3':
+			{
+				cout << "Last element: " << test.get() << "\n";
+				break;
+			}
+
+			case '4':
+			{
+				test.print();
+				break;
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}
