@@ -251,7 +251,7 @@ public:
 					return;
 				}
 			}
-			if (delNode->pParent&&delNode->pLeft)
+			if (delNode->pParent && delNode->pLeft)
 			{
 				delNode->pParent->pLeft = delNode->pLeft;
 				delNode->pLeft->pParent = delNode->pParent;
@@ -259,7 +259,7 @@ public:
 				--count;
 				return;
 			}
-			if (delNode->pParent&&delNode->pRight)
+			if (delNode->pParent && delNode->pRight)
 			{
 				if (delNode == delNode->pParent->pLeft)
 				{
@@ -371,15 +371,15 @@ public:
 
 int main()
 {
-	char ch = 'y';
+	char ch = 's';
 	int val;
 	vector<int> data;
 	cout << "Enter the data: \n";
-	while (ch == 'y')
+	while (ch == 's')
 	{
 		cin >> val;
 		data.push_back(val);
-		cout << "Press 'y' to continue\n";
+		cout << "Press 's' to continue\n";
 		cin >> ch;
 	}
 	cout << "------------------------------------------------\n\n";
