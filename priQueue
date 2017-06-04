@@ -1,0 +1,212 @@
+#include <iostream>
+#include <iterator>
+
+using namespace std;
+
+template <typename T> class priorQueue
+{
+private:
+	T* qptr;
+	int size;
+	T top;
+public:
+	priorQueue();
+	priorQueue(const T& size);
+	priorQueue(const priorQueue<T>& one);
+	~priorQueue();
+
+	void print()const;
+	T operator[] (const T& num)const;
+	void add(const T& value);
+	bool isFull()const;
+	void p_back();
+	T get()const;
+	// void quickSort(Iterator start, Iterator end);
+
+};
+template<typename Iterator>
+void quicksort(Iterator start, Iterator end)
+{
+	Iterator pivot = end - 1;
+	Iterator j = end - 1;
+	Iterator i = start;
+	while (i <= j)
+	{
+
+		while (*i > *pivot)
+		{
+			++i;
+		}
+		while (*j < *pivot)
+		{
+			--j;
+		}
+		if (i <= j)
+		{
+			iter_swap(j, i);
+			++i;
+			--j;
+		}
+	}
+	if (i < end)
+		quicksort(i, end);
+	if (start < j)
+		quicksort(start, j + 1);
+}
+
+template <typename T> priorQueue<T>::priorQueue()
+{
+	qptr = new T[5]();
+	top = 0;
+	size = 5;
+}
+
+template<typename T> priorQueue<T>::priorQueue(const T& _size)
+{
+	qptr = new T[_size]();
+	top = 0;
+	size = _size;
+}
+
+template <typename T> priorQueue<T>::~priorQueue()
+{
+	delete[] qptr;
+}
+
+template<typename T> T priorQueue<T>::operator[](const T& num)const
+{
+	return qptr[num];
+}
+
+template<typename T> bool priorQueue<T>::isFull()const
+{
+	return (top >= size);
+}
+
+template<typename T> void priorQueue<T>::add(const T& value)
+{
+	if (size == 0)
+	{
+		delete[] qptr;
+		qptr = new T[1]();
+		qptr[0] = value;
+		++size;
+		return;
+	}
+
+
+
+	if (!top && !qptr[0])
+	{
+		qptr[0] = value;
+		return;
+	}
+	++top;
+	if (isFull())
+	{
+		T* ptr = new T[size + 1]();
+		for (int i = 0; i < size; i++)
+			ptr[i] = qptr[i];
+		delete[] qptr;
+		qptr = ptr;
+		++size;
+		qptr[top] = value;
+	}
+	else
+	{
+		qptr[top] = value;
+	}
+
+	T* i1 = &qptr[0];
+	T* i2 = &qptr[top + 1];
+	quicksort(i1, i2);
+}
+
+template<typename T> void priorQueue<T>::print()const
+{
+	if (size)
+	{
+		for (int i = 0; i < size; i++)
+			cout << qptr[i] << "\t";
+		cout << "\n";
+	}
+	else cout << "Queue is empty!";
+}
+
+template<typename T> void priorQueue<T>::p_back()
+{
+	if (top)
+	{
+		T* ptr = new T[size - 1];
+		for (int i = 0; i < size - 1; i++)
+			ptr[i] = qptr[i + 1];
+		delete[] qptr;
+		qptr = ptr;
+		--size;
+		--top;
+	}
+	else
+	{
+		cout << "Now queue is empty!\n";
+		if (top == 0)
+		{
+			delete[] qptr;
+			qptr = nullptr;
+			size = 0;
+		}
+	}
+}
+
+template<typename T> T priorQueue<T>::get()const
+{
+	return qptr[top];
+}
+
+int main()
+{
+	int _size, value;
+	char ch = '9';
+	cout << "Enter the size: ";
+	cin >> _size;
+	priorQueue<int> test(_size);
+	while (ch != '0')
+	{
+		cout << "\n\n--------------------------------------------------------------\n" <<
+			"What do you want to do?\nPress:\n\"1\" to add data\n\"2\" to delete data\n\"3\" to show last element\n\"4\" to show the stack\n\"0\" to exit\n"
+			<< "--------------------------------------------------------------" << "\n\n";
+
+		cin >> ch;
+		cout << "\n";
+		switch (ch)
+		{
+		case '1':
+		{
+			cout << "Enter the value: ";
+			cin >> value;
+			test.add(value);
+			break;
+		}
+		case '2':
+		{
+			test.p_back();
+			break;
+		}
+		case '3':
+		{
+			cout << "Last element: " << test.get() << "\n";
+			break;
+		}
+
+		case '4':
+		{
+			test.print();
+			break;
+		}
+		}
+	}
+
+
+	system("pause");
+	return 0;
+}
+}
